@@ -20,6 +20,7 @@
         - **feature/dev_r_packages** : R のパッケージ関係
         - **feature/dev_python** : Python の設定
         - **feature/dev_tex** : TinyTeX のインストール関係
+        - **feature/dev_samples** : イメージに含める動作確認用サンプルファイルなど
     - **release** \
       リリース前の調整用（ドキュメント整備、開発用フォルダの削除など）
 
@@ -27,6 +28,7 @@
 
 ## 主要フォルダ・ファイル
 
+- .gitignore
 - Dockerfile
 - docker-compose.yml
 - README.md
