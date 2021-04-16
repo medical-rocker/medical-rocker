@@ -26,7 +26,7 @@
 
 その他は、必要に応じて臨時ブランチを作成する
 
-## 主要フォルダ・ファイル
+## 主要フォルダ・ファイル（レポジトリ内）
 
 - .gitignore
 - Dockerfile
@@ -34,6 +34,10 @@
 - README.md
 - **mr_scripts/**
     - 機能ごとのインストール用 shell スクリプトと関連ファイル
+    - イメージ作成時にイメージ内 `/mr_scripts/` に COPY して利用
+- **samples/**
+    - 動作確認用サンプルファイルなど
+    - イメージ作成時にイメージ内 `/home/rstudio/samples/` に COPY
 - **documents/**
     - 補助的なドキュメント（リリース時には削除予定）
     - e.g. Branch_polycy.md （このファイル） 
