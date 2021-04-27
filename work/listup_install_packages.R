@@ -7,6 +7,8 @@ library(tidyverse)
 # https://docs.google.com/spreadsheets/d/175Q_lzNG7P6TT2k9rUzzweoaKdJS_OJZ3lWpUuTfcvc/edit#gid=0
 # 「おすすめされたPackage」列をコピー
 
+# 「スコープ外」の psych, AMR, PredictABEL は除外する
+
 list_candidates <- 
   "
   finalfit
@@ -50,7 +52,6 @@ list_candidates <-
   patchwork
   plotly
   RColorBrewer
-  psych
   Amelia
   mice
   caret
@@ -79,8 +80,6 @@ list_candidates <-
   comorbidity
   furrr
   here
-  AMR
-  PredictABEL
   zipangu
   " %>%
   str_trim() %>% 
@@ -175,12 +174,12 @@ list_finally_install <- list_to_install %>%
   sort()
 
 # > length(list_finally_install)
-# [1] 476
+# [1] 461
 
 # CRAN (RSPM) 以外にあるもの
 # > setdiff(list_finally_install, tbl_cran$Package)
-# [1] "graph"     "limma"     "Rgraphviz" "sbw"      
+# [1] "limma" "sbw"      
 
-# graph, limma, Rgraphviz は BioConductor にある
+# limma は BioConductor にある
 # sbw は CRAN から削除され利用不可
 #   cobalt の Suggests なので 動作に不可欠ではない（最新版では削除されている様子）

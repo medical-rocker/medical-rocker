@@ -48,15 +48,30 @@ list_apt_install <- tbl_prerequisites %>%
   
 list_apt_install
 
-#  [1] "bwidget"              "default-jdk"          "gdal-bin"            
-#  [4] "imagemagick"          "libcairo2-dev"        "libcurl4-openssl-dev"
-#  [7] "libfontconfig1-dev"   "libfreetype6-dev"     "libfribidi-dev"      
-# [10] "libgdal-dev"          "libgeos-dev"          "libgl1-mesa-dev"     
-# [13] "libglpk-dev"          "libglu1-mesa-dev"     "libgmp3-dev"         
-# [16] "libharfbuzz-dev"      "libjpeg-dev"          "libmagick++-dev"     
-# [19] "libmysqlclient-dev"   "libpng-dev"           "libproj-dev"         
-# [22] "librsvg2-dev"         "libssl-dev"           "libtiff-dev"         
-# [25] "libudunits2-dev"      "libv8-dev"            "libxml2-dev"         
-# [28] "make"                 "mysql-server"         "pandoc"              
-# [31] "pandoc-citeproc"      "perl"                 "texlive"             
-# [34] "zlib1g-dev"
+#  [1] "default-jdk"          "gdal-bin"             "imagemagick"         
+#  [4] "libcairo2-dev"        "libcurl4-openssl-dev" "libfontconfig1-dev"  
+#  [7] "libfreetype6-dev"     "libfribidi-dev"       "libgdal-dev"         
+# [10] "libgeos-dev"          "libgl1-mesa-dev"      "libglpk-dev"         
+# [13] "libglu1-mesa-dev"     "libgmp3-dev"          "libharfbuzz-dev"     
+# [16] "libjpeg-dev"          "libmagick++-dev"      "libmysqlclient-dev"  
+# [19] "libpng-dev"           "libproj-dev"          "librsvg2-dev"        
+# [22] "libssl-dev"           "libtiff-dev"          "libudunits2-dev"     
+# [25] "libv8-dev"            "libxml2-dev"          "make"                
+# [28] "mysql-server"         "pandoc"               "pandoc-citeproc"     
+# [31] "perl"                 "texlive"              "zlib1g-dev"          
+
+# インストール済 deb/apt パッケージ
+list_already_installed <- gsub('^([^/]+).*', '\\1', system("apt list --installed", intern = T))
+
+# インストールされていない必要パッケージ
+setdiff(list_apt_install, list_already_installed)
+
+#  [1] "default-jdk"      "gdal-bin"         "imagemagick"      "libfribidi-dev"  
+#  [5] "libgdal-dev"      "libgeos-dev"      "libgl1-mesa-dev"  "libglpk-dev"     
+#  [9] "libglu1-mesa-dev" "libgmp3-dev"      "libharfbuzz-dev"  "libjpeg-dev"     
+# [13] "libmagick++-dev"  "libproj-dev"      "librsvg2-dev"     "libtiff-dev"     
+# [17] "libudunits2-dev"  "libv8-dev"        "mysql-server"     "pandoc"          
+# [21] "pandoc-citeproc"  "texlive"         
+
+# うち、pandoc は rocker/rstudio で RStudio server インストール時に手動インストール済
+# texlive は TinyTex で別途インストールする
