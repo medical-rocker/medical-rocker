@@ -28,8 +28,8 @@ RUN /mr_scripts/install_pandas.sh
 RUN /mr_scripts/install_notocjk.sh 
 
 USER rstudio
-RUN /my_scripts/install_tinytex.sh
-RUN /my_scripts/install_tex_packages.sh
+RUN /mr_scripts/install_tinytex.sh
+RUN /mr_scripts/install_tex_packages.sh
 
 # ${R_HOME}/etc/Renviron のタイムゾーン指定（Etc/UTC）を上書き
 RUN echo "TZ=Asia/Tokyo" >> /home/rstudio/.Renviron
