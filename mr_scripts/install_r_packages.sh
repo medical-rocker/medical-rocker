@@ -25,7 +25,9 @@ apt-get install -y --no-install-recommends \
 	libtiff-dev \
 	libudunits2-dev \
 	libv8-dev \
-	mysql-server
+	mysql-server \
+	libtcl8.6 \
+	libtk8.6
 
 apt-get clean
 rm -rf /var/lib/apt/lists/*
