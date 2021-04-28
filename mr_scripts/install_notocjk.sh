@@ -30,5 +30,5 @@ rm Noto*
 # 設定しておけば、最低限グラフの文字化けはなくなる
 
 mkdir -p /home/rstudio/.config/fontconfig
-cp /my_scripts/fonts.conf /home/rstudio/.config/fontconfig/
+cp /mr_scripts/fonts.conf /home/rstudio/.config/fontconfig/
 chown -R rstudio:rstudio /home/rstudio/.config
