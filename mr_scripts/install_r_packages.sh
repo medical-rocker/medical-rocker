@@ -38,10 +38,7 @@ R CMD javareconf
 # RSPMのcheckpointが変わった場合に対応するため、まずcheckpointの状態まで更新する
 Rscript -e "update.packages(ask = FALSE)"
 
-# Bioconductor もRSPMからインストールする
-echo "options(BioC_mirror = 'https://packagemanager.rstudio.com/bioconductor')" >> /usr/local/lib/R/etc/Rprofile.site
-
-# 依存関係でCRAN/RSPMにないものを先にインストール
+# 依存関係でCRAN/RSPMにないもの（Bioconductor）を先にインストール
 Rscript -e "BiocManager::install(c('limma'))"
 
 # CRANパッケージをRSPMからインストール
