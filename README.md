@@ -5,6 +5,41 @@
 - `reticulate` で最低限の python 連携も使用できるようにする
 - [rocker-org/rocker-versioned2](https://github.com/rocker-org/rocker-versioned2) のように、目的別のスクリプトを使って Dockerfile 自体は極力シンプルにしてみる
 
+## How to use
+
+このレポジトリを clone あるいは、全てのファイル・フォルダを（ZIPなどで）ダウンロードし、`Dockerfile` と `docker-compose.yml` のある階層で以下を実行する
+
+### docker-compose がある場合
+
+```
+# イメージ medical-rocker/tidyverse_ja:4.0.4 を作成（成功時 6.4 GB）
+docker-compose build
+
+# コンテナ rstudio として起動
+docker-compose up -d
+
+# http://localhost:8787 に接続して利用（パスワード不要）
+
+# コンテナの終了、削除
+docker-compose down
+```
+
+### docker-compose がない場合
+
+```
+# イメージ medical-rocker/tidyverse_ja:4.0.4 を作成（成功時 6.4 GB）
+docker image build -t "medical-rocker/tidyverse_ja:4.0.4" .
+
+# コンテナ rstudio として起動
+docker run --rm -d -p 8787:8787 --name rstudio medical-rocker/tidyverse_ja:4.0.4
+
+# http://localhost:8787 に接続して利用（パスワード不要）
+
+# コンテナの終了、削除
+docker stop rstudio
+```
+
+
 ## 詳細／暫定方針
 
 ### Ubuntu mirror
