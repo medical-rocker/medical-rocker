@@ -1,0 +1,13 @@
+# medical-rocker/tidyverse_ja のビルドと起動
+
+version: "3"
+services:
+  rstudio:
+    build: .
+    image: "medical-rocker/tidyverse_ja:4.0.4"
+    container_name: "rstudio"
+    ports:
+      - "8787:8787"
+  # environment:
+  #   PASSWORD: tidyverse
+  #   DISABLE_AUTH: "false"
