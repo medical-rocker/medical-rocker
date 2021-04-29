@@ -8,6 +8,6 @@ services:
     container_name: "rstudio"
     ports:
       - "8787:8787"
-    environment:
-      PASSWORD: tidyverse
-      # DISABLE_AUTH: "true"
+  # environment:
+  #   PASSWORD: tidyverse
+  #   DISABLE_AUTH: "false"
