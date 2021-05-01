@@ -12,11 +12,16 @@
 ### docker-compose がある場合
 
 ```
-# イメージ medical-rocker/tidyverse_ja:4.0.4 を作成（成功時 6.4 GB）
+# イメージ medical-rocker/tidyverse_ja:4.0.4 を作成（成功時 4.64 GB）
 docker-compose build
+# イメージ medical-rocker/tidyverse_ja:4.0.4_full を作成（成功時 6.4 GB）
+docker-compose -f docker-compose_full.yml build
 
 # コンテナ rstudio として起動
+# 通常版 medical-rocker/tidyverse_ja:4.0.4
 docker-compose up -d
+# 拡張版 medical-rocker/tidyverse_ja:4.0.4_full
+docker-compose -f docker-compose_full.yml up -d
 
 # http://localhost:8787 に接続して利用（パスワード不要）
 
@@ -27,11 +32,16 @@ docker-compose down
 ### docker-compose がない場合
 
 ```
-# イメージ medical-rocker/tidyverse_ja:4.0.4 を作成（成功時 6.4 GB）
+# イメージ medical-rocker/tidyverse_ja:4.0.4 を作成（成功時 4.64 GB）
 docker image build -t "medical-rocker/tidyverse_ja:4.0.4" .
+# イメージ medical-rocker/tidyverse_ja:4.0.4_full を作成（成功時 6.4 GB）
+docker image build -t "medical-rocker/tidyverse_ja:4.0.4" -f Dockerfile_full .
 
 # コンテナ rstudio として起動
+# 通常版 medical-rocker/tidyverse_ja:4.0.4
 docker run --rm -d -p 8787:8787 --name rstudio medical-rocker/tidyverse_ja:4.0.4
+# 拡張版 medical-rocker/tidyverse_ja:4.0.4_full
+docker run --rm -d -p 8787:8787 --name rstudio medical-rocker/tidyverse_ja:4.0.4_full
 
 # http://localhost:8787 に接続して利用（パスワード不要）
 
