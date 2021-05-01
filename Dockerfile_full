@@ -23,7 +23,7 @@ RUN set -x \
 # 各スクリプトは改行コード LF(UNIX) でないとエラーになる
 COPY mr_scripts /mr_scripts
 RUN chmod 775 mr_scripts/*
-RUN /mr_scripts/install_r_packages_wo_suggests.sh
+RUN /mr_scripts/install_r_packages.sh
 RUN /mr_scripts/install_pandas.sh
 RUN /mr_scripts/install_notocjk.sh 
 
