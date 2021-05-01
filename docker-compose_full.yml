@@ -1,12 +1,13 @@
 # medical-rocker/tidyverse_ja のビルドと起動
+# Suggests のパッケージまで含めた拡大版
 
 version: "3"
 services:
   rstudio:
     build:
       context: .
-      dockerfile: Dockerfile
-    image: "medical-rocker/tidyverse_ja:4.0.4"
+      dockerfile: Dockerfile_full
+    image: "medical-rocker/tidyverse_ja:4.0.4_full"
     container_name: rstudio
     ports:
       - "8787:8787"
