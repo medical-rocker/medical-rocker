@@ -90,3 +90,4 @@ docker stop rstudio
 
 ## History
 
+- 2021-05-06 :bookmark:[4.0.4_alpha01](https://github.com/mokztk/medical-rocker/releases/tag/4.0.4_alpha01) 最初の開発版
