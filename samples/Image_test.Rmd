@@ -1,0 +1,283 @@
+---
+title: "RStudioイメージ検証"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    df_print: kable
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+
+# レポート全体の共通設定
+knitr::opts_chunk$set(
+  comment = NA,
+  tidy    = TRUE,
+  echo    = FALSE,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+```{css, echo = FALSE}
+/* タイトル部分 */
+div#header {
+  border: solid thin #444; 
+  padding-left:  1em;
+  margin-bottom: 1em;
+}
+
+/* 見出しレベル2 (##) */
+h2 {
+  border-bottom: solid 3px #ccc;
+}
+div.level2 {
+  margin-top: 1em;
+}
+
+/* 表を縞にする */
+tr:nth-child(even) {
+  background-color: #eee;
+}
+tr:nth-child(odd) {
+  background-color: white;
+}
+
+/* 印刷用の設定 */
+@media print {
+  /* 印刷時の表の改ページ関係 */
+  thead {
+      display: table-header-group;
+  }
+
+  /* 印刷時にリンクの後ろにURLを付けない */
+  a[href]:after {
+    content: "";
+  }
+
+  /* 印刷時に [Code] ボタンを消す  */
+  button.code-folding-btn {
+    display: none;
+  }
+  
+  /* 目次は印刷しない */
+  #TOC {
+    display: none;
+  }
+
+}
+```
+
+## Memo
+
+<form>
+<textarea class="form-control" rows="5">
+【検証者】
+【Host OS】
+【Docker version】
+【備考】
+</textarea>
+</form>
+
+
+## Platform Info
+
+```{r platform}
+sessioninfo::platform_info() %>%
+  imap_dfr(~ c(setting = .y, value = .x))
+```
+
+**Default font :** `r system("fc-match", intern = TRUE)`
+
+\newpage
+
+## Package Info
+
+```{r chk_package_load, cache = TRUE}
+# 開始時に読み込まれているパッケージのリスト
+base_list <- search()
+
+# パッケージのロードを試みて結果を返す関数
+fun_chk_package_load <- function(pkg) {
+  temp <- tryCatch(
+    # 極力メッセージが表示されないようにパッケージを読み込む
+    suppressMessages(
+      library(pkg, character.only = TRUE, quietly = TRUE)
+    ),
+    # Warning, Error の場合はその内容を返す。改行はスペースに置換
+    warning = function(w) {
+      return(c("Warning", gsub("\n", " ", w$message)))
+    },
+    error = function(e) {
+      return(c("Error",   gsub("\n", " ", e$message)))
+    }
+  )
+
+  # 初期状態と比較して、新しくロードされたものを detach() する
+  sapply(setdiff(search(), base_list),
+    function(p) detach(pos = match(p, search())))
+
+  # パッケージのロード成功の場合は "ok"、失敗時はエラーメッセージを返す
+  if (pkg %in% temp) {
+    return(c(result = "ok",    message = "-"))
+  } else {
+    return(c(result = temp[1], message = temp[2]))
+  }
+}
+
+# インストールされている全パッケージについてテスト
+res_df <- .packages(all.available = TRUE) %>%
+  sessioninfo::package_info(pkgs = ., include_base = TRUE) %>%
+  as_tibble() %>%
+  select(package, ondiskversion, date, source) %>%
+  mutate(
+    chk_loading = map(package, ~ do.call(what = fun_chk_package_load, args = list(pkg = .))),
+    result      = map_chr(chk_loading, ~ .[1]),
+    result      = fct_relevel(result, c("Error", "Warning", "ok")),
+    message     = map_chr(chk_loading, ~ .[2])
+  ) %>%
+  select(-chk_loading)
+```
+
+```{r save_csv, eval = FALSE, include = FALSE}
+# 保存
+res_df %>%
+  # 並べ替え
+  arrange(result, package) %>%
+  # 文字化け対策
+  mutate(
+    message = str_replace_all(message, "(‘|’)", "'")
+  ) %>%
+  # 出力
+  write.csv(
+    file = "~/library_test.csv",
+    quote = TRUE, fileEncoding = "cp932"
+  )
+```
+
+### 読み込み時 Error (`r sum(res_df$result == "Error")`)
+
+```{r pkg_w_error}
+res_df %>%
+  filter(result == "Error") %>%
+  select(package, message) %>%
+  knitr::kable(format = "simple")
+# knitr::kable(col.names = c("package_name", ""))
+```
+
+### 読み込み時 Warning (`r sum(res_df$result == "Warning")`)
+
+```{r pkg_w_warn}
+res_df %>%
+  filter(result == "Warning") %>%
+  select(package, message) %>%
+  knitr::kable(format = "simple")
+# knitr::kable(col.names = c("package_name", ""))
+```
+
+### インストール済すべて (`r nrow(res_df)`)
+
+```{r pkg_version}
+res_df %>%
+  select(package, ondiskversion, date, source) %>%
+  knitr::kable(format = "simple")
+```
+
+\newpage
+
+## TinyTeX
+
+```{r tinytex, results = "asis"}
+if ("tinytex" %in% .packages(all.available = TRUE)) {
+  tryCatch(
+    {
+      tinytex::tlmgr("version", stdout = TRUE) %>%
+        paste(collapse = "\n") %>%
+        paste(tinytex::tlmgr_repo(stdout = TRUE), sep = "\n\n") %>%
+        paste("", "```", ., "```", sep = "\n") %>% 
+        append("**{tinytex} パッケージのインストールが完了しています。**<br>", .) %>%
+        cat()
+    },
+    warning = function(w) {
+      cat("**{tinytex} パッケージはありますが、インストールが完了していません。**")
+      # return(gsub('\\n', '', w$message))
+    }
+  )
+} else {
+  cat("**{tinytex} パッケージがありません。**")
+}
+```
+
+### インストール済のTeXパッケージ
+      
+```{r tinytex_packages}
+if ("tinytex" %in% .packages(all.available = TRUE)) {
+  tryCatch(
+    {
+      tinytex::tlmgr("list --only-installed", stdout = TRUE) %>%
+        tibble(plist = .) %>%
+        mutate(
+          package     = map_chr(plist, ~ gsub("^i\ ([^:]+):.*", "\\1", .)),
+          description = map_chr(plist, ~ gsub("^i\ .+:\ (.+)",  "\\1", .))
+        ) %>%
+        select(-plist) %>%
+        knitr::kable(format = "simple")
+    },
+    warning = function(w) {
+      return(gsub("\\n", "", w$message))
+    }
+  )
+}
+```
+
+\newpage
+
+## Python & {reticulate}
+
+```{r chk_reticulate, results = "asis"}
+if ("reticulate" %in% .packages(all.available = TRUE)) {
+  cat("**{reticulate} がインストールされています。**\n")
+
+  reticulate::py_config() %>%
+    capture.output() %>%
+    paste(collapse = "\n") %>%
+    paste("```", ., "```", sep = "\n") %>%
+    cat()
+} else {
+  cat("**{reticulate} がインストールされていません。**")
+  cat("<br><br>システムのpythonは<br>")
+  tryCatch(
+    {
+      system("python --version && which python", intern = TRUE) %>%
+        paste(collapse = "\n") %>%
+        paste("", "```", ., "```", sep = "\n") %>%
+        cat()
+    },
+    warning = function(w) {
+      paste("", "```", w$message, "```", sep = "\n") %>% cat()
+    },
+    error   = function(e) {
+      paste("", "```", e$message, "```", sep = "\n") %>% cat()
+    })
+}
+```
+
+### pip list --freeze
+
+```{r chk_pip_pkgs, results = "asis"}
+tryCatch(
+  {
+    system("python -m pip list -freeze", intern = TRUE) %>%
+      paste(collapse = "\n") %>%
+      cat()
+  },
+  warning = function(w) {
+    w$message
+  },
+  error   = function(e) {
+    e$message
+  })
+```
