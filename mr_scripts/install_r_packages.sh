@@ -25,7 +25,9 @@ apt-get install -y --no-install-recommends \
 	libtiff-dev \
 	libudunits2-dev \
 	libv8-dev \
-	mysql-server
+	mysql-server \
+	libtcl8.6 \
+	libtk8.6
 
 apt-get clean
 rm -rf /var/lib/apt/lists/*
@@ -36,10 +38,7 @@ R CMD javareconf
 # RSPMのcheckpointが変わった場合に対応するため、まずcheckpointの状態まで更新する
 Rscript -e "update.packages(ask = FALSE)"
 
-# Bioconductor もRSPMからインストールする
-echo "options(BioC_mirror = 'https://packagemanager.rstudio.com/bioconductor')" >> /usr/local/lib/R/etc/Rprofile.site
-
-# 依存関係でCRAN/RSPMにないものを先にインストール
+# 依存関係でCRAN/RSPMにないもの（Bioconductor）を先にインストール
 Rscript -e "BiocManager::install(c('limma'))"
 
 # CRANパッケージをRSPMからインストール
