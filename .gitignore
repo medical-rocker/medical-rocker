@@ -4,12 +4,12 @@
 # allow directories below
 !mr_scripts
 !samples
-!work
 !documents
 
 # allow files below
 !*.md
 !.gitignore
+!.dockerignore
 
 !*.yml
 !Dockerfile*
@@ -19,5 +19,3 @@
 
 !samples/*.R
 !samples/*.Rmd
-!work/*.R
-!work/*.txt
