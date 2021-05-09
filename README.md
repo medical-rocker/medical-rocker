@@ -85,9 +85,10 @@ docker stop rstudio
 
 ### 環境変数 PASSWORD の仮設定
 
-- Docker Desktop など `-e PASSWORD=...` が設定できないGUIでも起動テストできるように仮のパスワードを埋め込んでおく
+- Docker Desktop など `-e PASSWORD=...` が設定できないGUIでも起動テストできるように仮のパスワード（password）を埋め込んでおく
 - 更に、普段使いのため `DISABLE_AUTH=true` を埋め込む。パスワードが必要なときは、起動時に `-e DISABLE_AUTH=false`
 
 ## History
 
-- 2021-05-06 :bookmark:[4.0.4_alpha01](https://github.com/mokztk/medical-rocker/releases/tag/4.0.4_alpha01) 最初の開発版
+- 2021-05-06 :bookmark: [4.0.4_alpha01](https://github.com/medical-rocker/medical-rocker/releases/tag/4.0.4_alpha01) 最初の開発版
+- 2021-05-09 :octocat: medical-rocker/medical-rocker に移管
